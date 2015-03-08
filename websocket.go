@@ -6,7 +6,9 @@ import (
 	"github.com/gorilla/websocket"
 	"net/http"
 	"time"
+	"errors"
 )
+
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -148,4 +150,57 @@ func (conn *Socket)BroadCastBinary(msg []byte)error{
     
 }
 
-func (conn *Socket)
+func (conn *Socket)SendTextToUser(id string, msg string)error{
+	
+	for _,sock := range connections {
+		
+		if sock.Id == id {
+			
+			sock.SendText(msg)
+			return nil
+			
+			
+		}
+		
+		
+		
+	}
+	return errors.New("id not found")
+	
+	
+	
+	
+}
+
+func (conn *Socket)SentBinaryToUser(id string, msg []byte)error{
+	
+	
+	for _,sock := range connections {
+		
+		if sock.Id == id {
+			
+			sock.SendBinary(msg)
+			return nil
+			
+			
+		}
+		
+		
+		
+	}
+	return errors.New("id not found")
+	
+	
+	
+	
+	
+}
+
+
+func (conn *Socket)ReadMessage()(int,[]byte,error){
+	
+	return conn.Ws.ReadMessage()
+	
+	
+	
+}
