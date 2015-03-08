@@ -1,14 +1,13 @@
 package main // change to websocket when ready to ship
 
 import (
+	"errors"
 	"fmt"
 	"github.com/cookieo9/go-misc/slice"
 	"github.com/gorilla/websocket"
 	"net/http"
 	"time"
-	"errors"
 )
-
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -18,25 +17,13 @@ var upgrader = websocket.Upgrader{
 var connections []Socket
 
 type Socket struct {
-	Ws     *websocket.Conn
+	Ws       *websocket.Conn
 	Id       string
 	TTL      *time.Timer
 	deployed bool
 	deleted  bool
 }
 
-/*conn, err := upgrader.Upgrade(w, r, nil)
-
-
-messageType, p, err := conn.ReadMessage()
-    if err != nil {
-        return
-    }
-    if err = conn.WriteMessage(messageType, p); err != nil {
-        return err
-    }
-
-*/
 func main() {
 }
 
@@ -71,7 +58,7 @@ func SetReadBuffer(num int) {
 
 }
 
-func SetWriteBugger(num int) {
+func SetWriteBuffer(num int) {
 
 	upgrader.WriteBufferSize = num
 
@@ -100,107 +87,81 @@ func WsUpgrade(w http.ResponseWriter, r *http.Request, id string, timeout time.D
 
 }
 
-func (conn *Socket)SendText(msg string)error{
-    msgB  := []byte(msg)
-    
-   return conn.Ws.WriteMessage(1, msgB)
-    
-    
+func (conn *Socket) SendText(msg string) error {
+	msgB := []byte(msg)
+
+	return conn.Ws.WriteMessage(1, msgB)
+
 }
-func (conn *Socket)SendBinary(msgB []byte)error{
-    
-    return conn.Ws.WriteMessage(1, msgB)
+func (conn *Socket) SendBinary(msgB []byte) error {
+
+	return conn.Ws.WriteMessage(1, msgB)
 }
 
-func (conn *Socket)BroadCastString(msg string)error{
-    
-    for _,users:=range connections{
-        
-       e := users.SendText(msg)
-       if e != nil{
-           return e
-       }
-        
-        
-        
-    }
-    
-    return nil
-    
-    
-    
+func (conn *Socket) BroadCastString(msg string) error {
+
+	for _, users := range connections {
+
+		e := users.SendText(msg)
+		if e != nil {
+			return e
+		}
+
+	}
+
+	return nil
+
 }
 
-func (conn *Socket)BroadCastBinary(msg []byte)error{
-    
-     for _,users:=range connections{
-        
-       e := users.SendBinary(msg)
-       if e != nil{
-           return e
-       }
-        
-        
-        
-    }
-    
-    return nil
-    
-    
-    
+func (conn *Socket) BroadCastBinary(msg []byte) error {
+
+	for _, users := range connections {
+
+		e := users.SendBinary(msg)
+		if e != nil {
+			return e
+		}
+
+	}
+
+	return nil
+
 }
 
-func (conn *Socket)SendTextToUser(id string, msg string)error{
-	
-	for _,sock := range connections {
-		
+func (conn *Socket) SendTextToUser(id string, msg string) error {
+
+	for _, sock := range connections {
+
 		if sock.Id == id {
-			
+
 			sock.SendText(msg)
 			return nil
-			
-			
+
 		}
-		
-		
-		
+
 	}
 	return errors.New("id not found")
-	
-	
-	
-	
+
 }
 
-func (conn *Socket)SentBinaryToUser(id string, msg []byte)error{
-	
-	
-	for _,sock := range connections {
-		
+func (conn *Socket) SentBinaryToUser(id string, msg []byte) error {
+
+	for _, sock := range connections {
+
 		if sock.Id == id {
-			
+
 			sock.SendBinary(msg)
 			return nil
-			
-			
+
 		}
-		
-		
-		
+
 	}
 	return errors.New("id not found")
-	
-	
-	
-	
-	
+
 }
 
+func (conn *Socket) ReadMessage() (int, []byte, error) {
 
-func (conn *Socket)ReadMessage()(int,[]byte,error){
-	
 	return conn.Ws.ReadMessage()
-	
-	
-	
+
 }
