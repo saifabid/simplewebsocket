@@ -147,3 +147,5 @@ func (conn *Socket)BroadCastBinary(msg []byte)error{
     
     
 }
+
+func (conn *Socket)
