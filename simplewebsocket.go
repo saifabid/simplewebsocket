@@ -1,4 +1,4 @@
-package main // change to websocket when ready to ship
+package simplewebsocket // change to websocket when ready to ship
 
 import (
 	"errors"
@@ -24,8 +24,6 @@ type Socket struct {
 	deleted  bool
 }
 
-func main() {
-}
 
 func DeployWsDameon() {
 
