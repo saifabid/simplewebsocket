@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
@@ -26,7 +27,7 @@ type Socket struct {
 
 
 func DeployWsDameon() {
-
+// ensures time keeping of all connections
 	for {
 
 		for index, j := range connections {
