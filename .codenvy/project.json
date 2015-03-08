@@ -1,0 +1,1 @@
+{"mixinTypes":["contribution"],"runners":{"configs":{"system:/go/web":{"ram":0,"variables":{},"options":{}}},"default":"system:/go/web"},"builders":{"configs":{}},"description":"thin wrapper for websockets","type":"go","attributes":{"language":["go"],"contribute_branch":["master"],"contribute_mode":["contribute"]}}
