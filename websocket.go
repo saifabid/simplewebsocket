@@ -98,7 +98,7 @@ func (conn *Socket) SendBinary(msgB []byte) error {
 	return conn.Ws.WriteMessage(1, msgB)
 }
 
-func (conn *Socket) BroadCastString(msg string) error {
+func (conn *Socket) BroadcastString(msg string) error {
 
 	for _, users := range connections {
 
@@ -113,7 +113,7 @@ func (conn *Socket) BroadCastString(msg string) error {
 
 }
 
-func (conn *Socket) BroadCastBinary(msg []byte) error {
+func (conn *Socket) BroadcastBinary(msg []byte) error {
 
 	for _, users := range connections {
 
